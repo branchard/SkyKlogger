@@ -17,7 +17,7 @@ public class Utils
 		BufferedWriter bf = null;
 		try
 		{
-			bf = new BufferedWriter(new FileWriter(Constants.logFile, true));
+			bf = new BufferedWriter(new FileWriter(Constants.LOG_FILE, true));
 			bf.write(line + "\n");
 			
 			bf.close();
@@ -39,6 +39,7 @@ public class Utils
 			}
 		}
 	}
+	
 	
 	public static String getApplicationRootDirectory()
 	{

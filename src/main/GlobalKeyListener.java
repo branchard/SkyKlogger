@@ -13,9 +13,9 @@ import org.jnativehook.mouse.NativeMouseInputListener;
 
 public class GlobalKeyListener implements NativeKeyListener, NativeMouseInputListener
 {
-	private StringBuilder buffer;
-	private boolean capsReverse; //shift
-	
+	private StringBuilder	buffer;
+	private boolean			capsReverse;	//shift
+											
 	public GlobalKeyListener()
 	{
 		capsReverse = false;
@@ -35,18 +35,30 @@ public class GlobalKeyListener implements NativeKeyListener, NativeMouseInputLis
 		String s = NativeKeyEvent.getKeyText(e.getKeyCode());
 		if(s.length() == 1)
 		{
-			if((getCapsLockState() && !capsReverse) || (!getCapsLockState() && capsReverse))
-				s = s.toUpperCase();
-			else
-				s = s.toLowerCase();
-			buffer.append(s.charAt(0));
+			buffer.append(convertCharToMinMaj(s.charAt(0)));
 		}
 		else
 		{
-			buffer.append('<');
-			buffer.append(s);
-			buffer.append('>');
+			
+			buffer.append(keyNameToKeyChar(s));
 		}
+	}
+	
+	private char convertCharToMinMaj(char c)
+	{
+		if((getCapsLockState() && !capsReverse) || (!getCapsLockState() && capsReverse))
+			return Character.toUpperCase(c);
+		else
+			return Character.toLowerCase(c);
+	}
+	
+	private String keyNameToKeyChar(String keyName)
+	{
+		keyName = keyName.toUpperCase();
+		if(Constants.KEYNAME_CHAR.containsKey(keyName))
+			return Character.toString(convertCharToMinMaj(Constants.KEYNAME_CHAR.get(keyName.toUpperCase())));
+		else
+			return "<" + keyName + ">";
 	}
 	
 	private boolean getCapsLockState()
@@ -124,7 +136,6 @@ public class GlobalKeyListener implements NativeKeyListener, NativeMouseInputLis
 			System.exit(1);
 		}
 		
-		//Construct the example object and initialze native hook.
 		GlobalKeyListener gkl = new GlobalKeyListener();
 		GlobalScreen.getInstance().addNativeKeyListener(gkl);
 		GlobalScreen.getInstance().addNativeMouseListener(gkl);
